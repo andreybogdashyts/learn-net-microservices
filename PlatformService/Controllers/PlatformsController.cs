@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PlatformService.Data;
 using PlatformService.Dtos;
 using PlatformService.Models;
+using PlatformService.SyncDataServices;
 
 namespace PlatformService.Controllers
 {
@@ -10,11 +11,16 @@ namespace PlatformService.Controllers
     [ApiController]
     public class PlatformsController : ControllerBase
     {
+        private readonly ICommandDataClient _commandDataClient;
         private readonly IPlatformRepository _repository;
         private readonly IMapper _mapper;
 
-        public PlatformsController(IPlatformRepository repository, IMapper mapper)
+        public PlatformsController(
+            IPlatformRepository repository,
+            IMapper mapper,
+            ICommandDataClient commandDataClient)
         {
+            _commandDataClient = commandDataClient;
             _repository = repository;
             _mapper = mapper;
         }
@@ -39,7 +45,7 @@ namespace PlatformService.Controllers
             return NotFound();
         }
 
-        public ActionResult<PlatformReadDto> CreatePlatform(PlatformCreateDto p)
+        public async Task<ActionResult<PlatformReadDto>> CreatePlatform(PlatformCreateDto p)
         {
             Console.WriteLine("--> Create Platform....");
             var pm = _mapper.Map<Platform>(p);
@@ -47,7 +53,16 @@ namespace PlatformService.Controllers
             _repository.SaveChanges();
 
             var prd = _mapper.Map<PlatformReadDto>(pm);
-            return CreatedAtRoute(nameof(GetPlatformById), new { Id = prd.Id }, prd );
+
+            try
+            {
+                await _commandDataClient.SendPlatformToCommand(prd);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"--> Could not send synchronously. {ex.Message}");
+            }
+            return CreatedAtRoute(nameof(GetPlatformById), new { Id = prd.Id }, prd);
         }
     }
 }
