@@ -27,3 +27,5 @@ Kuberbetes
         kubectl delete deployment platform-depl
     get services
         kubectl get services
+    refresh deployment
+        kubectl rollout restart deployment .\platforms-depl.yaml
