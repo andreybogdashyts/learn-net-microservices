@@ -29,3 +29,6 @@ Kuberbetes
         kubectl get services
     refresh deployment
         kubectl rollout restart deployment .\platforms-depl.yaml
+    create secret
+        kubectl create secret generic mssql --from-literal=SA_PASSWORD="pa55w0rd!"
+    
