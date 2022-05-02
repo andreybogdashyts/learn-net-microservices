@@ -22,7 +22,8 @@ Kuberbetes
     get deployements
         kubectl get deployments
     get pods
-        kubects get pods
+        kubectl get pods
+        kubectl get pods --namespace=ingress-nginx
     delete deployment
         kubectl delete deployment platform-depl
     get services
