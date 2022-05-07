@@ -32,4 +32,9 @@ Kuberbetes
         kubectl rollout restart deployment .\platforms-depl.yaml
     create secret
         kubectl create secret generic mssql --from-literal=SA_PASSWORD="pa55w0rd!"
-    
+    use specific configuration
+        kubectl config use-context docker-desktop
+    get details of pod
+        kubectl describe pod {pod_name}
+    nginx
+        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.2.0/deploy/static/provider/cloud/deploy.yaml
