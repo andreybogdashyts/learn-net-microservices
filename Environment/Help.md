@@ -25,7 +25,7 @@ docker ps
 ```
 docker stop {container ID}
 ```
-```push image`
+```push image```
 ```
 docker push andreybogdashyts/learn-platformservice
 ```
